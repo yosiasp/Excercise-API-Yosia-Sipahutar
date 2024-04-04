@@ -1,5 +1,6 @@
 const usersRepository = require('./users-repository');
 const { hashPassword } = require('../../../utils/password');
+const { password_confirm } = require('../../../models/users-schema');
 
 /**
  * Get list of users
@@ -41,6 +42,36 @@ async function getUser(id) {
   };
 }
 
+/**
+ * Get user detail
+ * @param {string} email - User ID
+ * @returns {Promise}
+ */
+async function getemail(email) {
+  const User = await usersRepository.getEmail(email);
+
+  //email
+  if (!User) {
+    return true;
+  } else {
+    return false;
+  }
+}
+/**
+ * Get password detail
+ * @param {string} password - Password
+ * @returns {Promise}
+ */
+async function getcekPassword(password) {
+  const cekPassword = await usersRepository.getPassword(password);
+
+  //password
+  if (cekPassword) {
+    return true;
+  } else {
+    return false;
+  }
+}
 /**
  * Create new user
  * @param {string} name - Name
@@ -113,4 +144,6 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
+  getemail,
+  getcekPassword,
 };
