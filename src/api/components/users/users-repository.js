@@ -62,10 +62,32 @@ async function deleteUser(id) {
   return User.deleteOne({ _id: id });
 }
 
+/**
+ * Mendapatkan email user
+ * @param {string} email - User emai
+ * @returns {Promise}
+ */
+
+async function getEmail(email) {
+  return User.findOne({ email: email });
+}
+
+/**
+ * Mendapatkan user dengan detail
+ * @param {string} password - User password
+ * @returns {Promise}
+ */
+
+async function getPassword(password) {
+  return User.findOne({ password: password });
+}
+
 module.exports = {
   getUsers,
   getUser,
   createUser,
   updateUser,
   deleteUser,
+  getEmail,
+  getPassword,
 };
