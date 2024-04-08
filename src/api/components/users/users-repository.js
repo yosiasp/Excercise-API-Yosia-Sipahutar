@@ -33,6 +33,15 @@ async function createUser(name, email, password) {
 }
 
 /**
+ * Get user detail (email)
+ * @param {string} email - User email
+ * @returns {Promise}
+ */
+async function getEmail(email) {
+  return User.findOne({ email: email });
+}
+
+/**
  * Update existing user
  * @param {string} id - User ID
  * @param {string} name - Name
@@ -63,31 +72,26 @@ async function deleteUser(id) {
 }
 
 /**
- * Mendapatkan email user
- * @param {string} email - User emai
- * @returns {Promise}
- */
-
-async function getEmail(email) {
-  return User.findOne({ email: email });
-}
-
-/**
- * Mendapatkan user dengan detail
+ * Get user detail (password)
  * @param {string} password - User password
  * @returns {Promise}
  */
-
 async function getPassword(password) {
-  return User.findOne({ password: password });
+  return User.find({ password: password });
+}
+
+// NewPassword
+async function getPasswordNew(id, password_new) {
+  return User.findByIdAndUpdate(id, { password: password_new });
 }
 
 module.exports = {
   getUsers,
   getUser,
+  getEmail,
+  getPassword,
+  getPasswordNew,
   createUser,
   updateUser,
   deleteUser,
-  getEmail,
-  getPassword,
 };
