@@ -1,6 +1,5 @@
 const usersService = require('./users-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
-const { password_confirm } = require('../../../models/users-schema');
 
 /**
  * Handle get list of users request
@@ -51,20 +50,28 @@ async function createUser(request, response, next) {
     const name = request.body.name;
     const email = request.body.email;
     const password = request.body.password;
-    const cekEmail = await usersService.getemail(email);
-    const cekPassword = await usersService.getcekPassword(password);
-    const password_confirm = request.body.password_confirm;
+    const password_confirm = request.body.password_confirm; // Buat confirm password
+    const checkEmail = await usersService.getCheckEmail(email); // Buat check email
+    const checkPassword = await usersService.getCheckPassword(password);
 
-    if (!cekEmail) {
+    // checkEmail
+    if (!checkEmail) {
       throw errorResponder(
         errorTypes.EMAIL_ALREADY_TAKEN,
-        'Email alredy exist'
+        'Email already existed'
       );
     }
 
-    if (cekPassword != password) {
+    // checkPassword
+    if (!checkPassword) {
       throw errorResponder(errorTypes.INVALID_PASSWORD, 'Invalid Password');
     }
+
+    if (password_confirm != password) {
+      throw errorResponder(errorTypes.INVALID_PASSWORD, 'Invalid Password');
+    }
+
+    //
 
     const success = await usersService.createUser(
       name,
@@ -137,10 +144,30 @@ async function deleteUser(request, response, next) {
   }
 }
 
+async function changePassword(request, response, next) {
+  try {
+    const id = request.params.id;
+    const password_old = request.body.password_old;
+    const password_new = request.body.password_new;
+    const password_confirm = request.body.password_confirm;
+    const getChangePassword = await usersService.getChangePassword(
+      id,
+      password_old,
+      password_new,
+      password_confirm
+    );
+
+    return response.status(200).json({ message: 'Login Succesful' });
+  } catch (error) {
+    return next(error);
+  }
+}
+
 module.exports = {
   getUsers,
   getUser,
   createUser,
+  changePassword,
   updateUser,
   deleteUser,
 };
